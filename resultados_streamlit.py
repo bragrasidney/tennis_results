@@ -4,17 +4,17 @@ import pandas as pd
 # Função para calcular o vencedor de um set
 def calcular_vencedor_set(games_jogador1, games_jogador2, pontos_tiebreak_jogador1=None, pontos_tiebreak_jogador2=None):
     if games_jogador1 >= 4 and games_jogador1 >= games_jogador2 + 2:
-        return "Jogador 1"
+        return "Jogador 1", games_jogador1, games_jogador2
     elif games_jogador2 >= 4 and games_jogador2 >= games_jogador1 + 2:
-        return "Jogador 2"
+        return "Jogador 2", games_jogador1, games_jogador2
     elif games_jogador1 == 3 and games_jogador2 == 3:
         if pontos_tiebreak_jogador1 is not None and pontos_tiebreak_jogador2 is not None:
             if pontos_tiebreak_jogador1 >= 7 and pontos_tiebreak_jogador1 >= pontos_tiebreak_jogador2 + 2:
-                return "Jogador 1"
+                return "Jogador 1", 4, 3  # Resultado final do set: 4x3
             elif pontos_tiebreak_jogador2 >= 7 and pontos_tiebreak_jogador2 >= pontos_tiebreak_jogador1 + 2:
-                return "Jogador 2"
-        return "Tiebreak"
-    return None
+                return "Jogador 2", 3, 4  # Resultado final do set: 3x4
+        return "Tiebreak", games_jogador1, games_jogador2
+    return None, games_jogador1, games_jogador2
 
 # Função para calcular o vencedor de um supertiebreak
 def calcular_vencedor_supertiebreak(pontos_jogador1, pontos_jogador2):
@@ -78,8 +78,12 @@ else:
     pontos_tiebreak_jogador2_set2 = None
 
 # Verifica se é necessário um supertiebreak
-vencedor_set1 = calcular_vencedor_set(games_jogador1_set1, games_jogador2_set1, pontos_tiebreak_jogador1_set1, pontos_tiebreak_jogador2_set1)
-vencedor_set2 = calcular_vencedor_set(games_jogador1_set2, games_jogador2_set2, pontos_tiebreak_jogador1_set2, pontos_tiebreak_jogador2_set2)
+vencedor_set1, games_jogador1_set1_final, games_jogador2_set1_final = calcular_vencedor_set(
+    games_jogador1_set1, games_jogador2_set1, pontos_tiebreak_jogador1_set1, pontos_tiebreak_jogador2_set1
+)
+vencedor_set2, games_jogador1_set2_final, games_jogador2_set2_final = calcular_vencedor_set(
+    games_jogador1_set2, games_jogador2_set2, pontos_tiebreak_jogador1_set2, pontos_tiebreak_jogador2_set2
+)
 
 if vencedor_set1 == vencedor_set2:
     st.subheader("Supertiebreak (obrigatório devido ao empate nos sets)")
@@ -113,18 +117,18 @@ if st.button("Registrar Resultados"):
         pontos_vitoria = 8
 
     if vencedor_set1 == "Jogador 1" and vencedor_set2 == "Jogador 1":
-        atualizar_estatisticas(jogador1, 1, 0, 2, games_jogador1_set1 + games_jogador1_set2, 0, pontos_vitoria)
-        atualizar_estatisticas(jogador2, 0, 1, 0, games_jogador2_set1 + games_jogador2_set2, 0, 0)
+        atualizar_estatisticas(jogador1, 1, 0, 2, games_jogador1_set1_final + games_jogador1_set2_final, 0, pontos_vitoria)
+        atualizar_estatisticas(jogador2, 0, 1, 0, games_jogador2_set1_final + games_jogador2_set2_final, 0, 0)
     elif vencedor_set1 == "Jogador 2" and vencedor_set2 == "Jogador 2":
-        atualizar_estatisticas(jogador2, 1, 0, 2, games_jogador2_set1 + games_jogador2_set2, 0, pontos_vitoria)
-        atualizar_estatisticas(jogador1, 0, 1, 0, games_jogador1_set1 + games_jogador1_set2, 0, 0)
+        atualizar_estatisticas(jogador2, 1, 0, 2, games_jogador2_set1_final + games_jogador2_set2_final, 0, pontos_vitoria)
+        atualizar_estatisticas(jogador1, 0, 1, 0, games_jogador1_set1_final + games_jogador1_set2_final, 0, 0)
     elif vencedor_set1 == vencedor_set2:
         if vencedor_supertiebreak == "Jogador 1":
-            atualizar_estatisticas(jogador1, 1, 0, 1, games_jogador1_set1 + games_jogador1_set2, 1, pontos_vitoria)
-            atualizar_estatisticas(jogador2, 0, 1, 1, games_jogador2_set1 + games_jogador2_set2, 1, 0)
+            atualizar_estatisticas(jogador1, 1, 0, 1, games_jogador1_set1_final + games_jogador1_set2_final, 1, pontos_vitoria)
+            atualizar_estatisticas(jogador2, 0, 1, 1, games_jogador2_set1_final + games_jogador2_set2_final, 1, 0)
         elif vencedor_supertiebreak == "Jogador 2":
-            atualizar_estatisticas(jogador2, 1, 0, 1, games_jogador2_set1 + games_jogador2_set2, 1, pontos_vitoria)
-            atualizar_estatisticas(jogador1, 0, 1, 1, games_jogador1_set1 + games_jogador1_set2, 1, 0)
+            atualizar_estatisticas(jogador2, 1, 0, 1, games_jogador2_set1_final + games_jogador2_set2_final, 1, pontos_vitoria)
+            atualizar_estatisticas(jogador1, 0, 1, 1, games_jogador1_set1_final + games_jogador1_set2_final, 1, 0)
 
 # Exibição da tabela de estatísticas
 st.header("Estatísticas por Grupo")
