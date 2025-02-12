@@ -104,12 +104,13 @@ if st.button("Registrar Resultados"):
     elif vencedor_set1 == "Jogador 2" and vencedor_set2 == "Jogador 2":
         atualizar_estatisticas(jogador2, 1, 0, 2, games_jogador2_set1 + games_jogador2_set2, 0, pontos_vitoria)
         atualizar_estatisticas(jogador1, 0, 1, 0, games_jogador1_set1 + games_jogador1_set2, 0, 0)
-    elif vencedor_supertiebreak == "Jogador 1":
-        atualizar_estatisticas(jogador1, 1, 0, 1, games_jogador1_set1 + games_jogador1_set2, 1, pontos_vitoria)
-        atualizar_estatisticas(jogador2, 0, 1, 1, games_jogador2_set1 + games_jogador2_set2, 1, 0)
-    elif vencedor_supertiebreak == "Jogador 2":
-        atualizar_estatisticas(jogador2, 1, 0, 1, games_jogador2_set1 + games_jogador2_set2, 1, pontos_vitoria)
-        atualizar_estatisticas(jogador1, 0, 1, 1, games_jogador1_set1 + games_jogador1_set2, 1, 0)
+    elif vencedor_set1 == vencedor_set2:
+        if vencedor_supertiebreak == "Jogador 1":
+            atualizar_estatisticas(jogador1, 1, 0, 1, games_jogador1_set1 + games_jogador1_set2, 1, pontos_vitoria)
+            atualizar_estatisticas(jogador2, 0, 1, 1, games_jogador2_set1 + games_jogador2_set2, 1, 0)
+        elif vencedor_supertiebreak == "Jogador 2":
+            atualizar_estatisticas(jogador2, 1, 0, 1, games_jogador2_set1 + games_jogador2_set2, 1, pontos_vitoria)
+            atualizar_estatisticas(jogador1, 0, 1, 1, games_jogador1_set1 + games_jogador1_set2, 1, 0)
 
 # Exibição da tabela de estatísticas
 st.header("Estatísticas por Grupo")
