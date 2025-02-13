@@ -126,7 +126,10 @@ vencedor_set2, games_jogador1_set2_final, games_jogador2_set2_final, saldo_tiebr
     games_jogador1_set2, games_jogador2_set2, pontos_tiebreak_jogador1_set2, pontos_tiebreak_jogador2_set2
 )
 
-if vencedor_set1 == vencedor_set2:
+# Exibe o supertiebreak apenas se houver empate nos sets
+if vencedor_set1 != vencedor_set2:
+    st.success(f"Partida decidida nos sets: {jogador1 if vencedor_set1 == 'Jogador 1' and vencedor_set2 == 'Jogador 1' else jogador2} venceu!")
+else:
     st.subheader("Supertiebreak (obrigatório devido ao empate nos sets)")
     pontos_jogador1_supertiebreak = st.number_input("Pontos do Jogador 1 - Supertiebreak", min_value=0, max_value=20, value=0)
     pontos_jogador2_supertiebreak = st.number_input("Pontos do Jogador 2 - Supertiebreak", min_value=0, max_value=20, value=0)
