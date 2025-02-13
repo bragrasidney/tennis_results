@@ -41,11 +41,11 @@ def calcular_vencedor_set(games_jogador1, games_jogador2, pontos_tiebreak_jogado
         return "Jogador 1", games_jogador1, games_jogador2, 0  # Sem tiebreak
     elif games_jogador2 >= 4 and games_jogador2 >= games_jogador1 + 2:
         return "Jogador 2", games_jogador1, games_jogador2, 0  # Sem tiebreak
-    elif games_jogador1 == 3 and games_jogador2 == 3:
+    elif (games_jogador1 == 4 and games_jogador2 == 3) or (games_jogador1 == 3 and games_jogador2 == 4):
         if pontos_tiebreak_jogador1 is not None and pontos_tiebreak_jogador2 is not None:
-            if pontos_tiebreak_jogador1 >= 7 and pontos_tiebreak_jogador1 >= pontos_tiebreak_jogador2 + 2:
+            if pontos_tiebreak_jogador1 > pontos_tiebreak_jogador2:
                 return "Jogador 1", 4, 3, 1  # Jogador 1 venceu o tiebreak
-            elif pontos_tiebreak_jogador2 >= 7 and pontos_tiebreak_jogador2 >= pontos_tiebreak_jogador1 + 2:
+            else:
                 return "Jogador 2", 3, 4, -1  # Jogador 2 venceu o tiebreak
         return "Tiebreak", games_jogador1, games_jogador2, 0  # Tiebreak em andamento
     return None, games_jogador1, games_jogador2, 0  # Set em andamento
@@ -93,7 +93,7 @@ games_jogador1_set1 = st.number_input("Games do Jogador 1 - Set 1", min_value=0,
 games_jogador2_set1 = st.number_input("Games do Jogador 2 - Set 1", min_value=0, max_value=6, value=0)
 
 # Verifica se é necessário um tiebreak no primeiro set
-if games_jogador1_set1 == 3 and games_jogador2_set1 == 3:
+if (games_jogador1_set1 == 4 and games_jogador2_set1 == 3) or (games_jogador1_set1 == 3 and games_jogador2_set1 == 4):
     st.subheader("Tiebreak do Primeiro Set")
     pontos_tiebreak_jogador1_set1 = st.number_input("Pontos do Jogador 1 - Tiebreak Set 1", min_value=0, max_value=20, value=0)
     pontos_tiebreak_jogador2_set1 = st.number_input("Pontos do Jogador 2 - Tiebreak Set 1", min_value=0, max_value=20, value=0)
@@ -106,7 +106,7 @@ games_jogador1_set2 = st.number_input("Games do Jogador 1 - Set 2", min_value=0,
 games_jogador2_set2 = st.number_input("Games do Jogador 2 - Set 2", min_value=0, max_value=6, value=0)
 
 # Verifica se é necessário um tiebreak no segundo set
-if games_jogador1_set2 == 3 and games_jogador2_set2 == 3:
+if (games_jogador1_set2 == 4 and games_jogador2_set2 == 3) or (games_jogador1_set2 == 3 and games_jogador2_set2 == 4):
     st.subheader("Tiebreak do Segundo Set")
     pontos_tiebreak_jogador1_set2 = st.number_input("Pontos do Jogador 1 - Tiebreak Set 2", min_value=0, max_value=20, value=0)
     pontos_tiebreak_jogador2_set2 = st.number_input("Pontos do Jogador 2 - Tiebreak Set 2", min_value=0, max_value=20, value=0)
