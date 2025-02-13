@@ -4,17 +4,17 @@ import pandas as pd
 # Função para calcular o vencedor de um set
 def calcular_vencedor_set(games_jogador1, games_jogador2, pontos_tiebreak_jogador1=None, pontos_tiebreak_jogador2=None):
     if games_jogador1 >= 4 and games_jogador1 >= games_jogador2 + 2:
-        return "Jogador 1", games_jogador1, games_jogador2
+        return "Jogador 1", games_jogador1, games_jogador2, 0  # Sem tiebreak
     elif games_jogador2 >= 4 and games_jogador2 >= games_jogador1 + 2:
-        return "Jogador 2", games_jogador1, games_jogador2
+        return "Jogador 2", games_jogador1, games_jogador2, 0  # Sem tiebreak
     elif games_jogador1 == 3 and games_jogador2 == 3:
         if pontos_tiebreak_jogador1 is not None and pontos_tiebreak_jogador2 is not None:
             if pontos_tiebreak_jogador1 >= 7 and pontos_tiebreak_jogador1 >= pontos_tiebreak_jogador2 + 2:
-                return "Jogador 1", 4, 3  # Resultado final do set: 4x3
+                return "Jogador 1", 4, 3, 1  # Jogador 1 venceu o tiebreak
             elif pontos_tiebreak_jogador2 >= 7 and pontos_tiebreak_jogador2 >= pontos_tiebreak_jogador1 + 2:
-                return "Jogador 2", 3, 4  # Resultado final do set: 3x4
-        return "Tiebreak", games_jogador1, games_jogador2
-    return None, games_jogador1, games_jogador2
+                return "Jogador 2", 3, 4, -1  # Jogador 2 venceu o tiebreak
+        return "Tiebreak", games_jogador1, games_jogador2, 0  # Tiebreak em andamento
+    return None, games_jogador1, games_jogador2, 0  # Set em andamento
 
 # Função para calcular o vencedor de um supertiebreak
 def calcular_vencedor_supertiebreak(pontos_jogador1, pontos_jogador2):
@@ -25,7 +25,7 @@ def calcular_vencedor_supertiebreak(pontos_jogador1, pontos_jogador2):
     return None
 
 # Função para atualizar a tabela de estatísticas
-def atualizar_estatisticas(jogador, vitoria, derrota, sets, games, tiebreaks, pontos):
+def atualizar_estatisticas(jogador, vitoria, derrota, sets, games, saldo_tiebreaks, pontos):
     if jogador not in estatisticas:
         estatisticas[jogador] = {"Jogos": 0, "Vitórias": 0, "Derrotas": 0, "Sets": 0, "Games": 0, "Tiebreaks": 0, "Pontos": 0}
     estatisticas[jogador]["Jogos"] += 1
@@ -33,7 +33,7 @@ def atualizar_estatisticas(jogador, vitoria, derrota, sets, games, tiebreaks, po
     estatisticas[jogador]["Derrotas"] += derrota
     estatisticas[jogador]["Sets"] += sets
     estatisticas[jogador]["Games"] += games
-    estatisticas[jogador]["Tiebreaks"] += tiebreaks
+    estatisticas[jogador]["Tiebreaks"] += saldo_tiebreaks
     estatisticas[jogador]["Pontos"] += pontos
 
 # Inicialização das estatísticas
@@ -78,10 +78,10 @@ else:
     pontos_tiebreak_jogador2_set2 = None
 
 # Verifica se é necessário um supertiebreak
-vencedor_set1, games_jogador1_set1_final, games_jogador2_set1_final = calcular_vencedor_set(
+vencedor_set1, games_jogador1_set1_final, games_jogador2_set1_final, saldo_tiebreak_set1 = calcular_vencedor_set(
     games_jogador1_set1, games_jogador2_set1, pontos_tiebreak_jogador1_set1, pontos_tiebreak_jogador2_set1
 )
-vencedor_set2, games_jogador1_set2_final, games_jogador2_set2_final = calcular_vencedor_set(
+vencedor_set2, games_jogador1_set2_final, games_jogador2_set2_final, saldo_tiebreak_set2 = calcular_vencedor_set(
     games_jogador1_set2, games_jogador2_set2, pontos_tiebreak_jogador1_set2, pontos_tiebreak_jogador2_set2
 )
 
@@ -117,18 +117,18 @@ if st.button("Registrar Resultados"):
         pontos_vitoria = 8
 
     if vencedor_set1 == "Jogador 1" and vencedor_set2 == "Jogador 1":
-        atualizar_estatisticas(jogador1, 1, 0, 2, games_jogador1_set1_final + games_jogador1_set2_final, 0, pontos_vitoria)
-        atualizar_estatisticas(jogador2, 0, 1, 0, games_jogador2_set1_final + games_jogador2_set2_final, 0, 0)
+        atualizar_estatisticas(jogador1, 1, 0, 2, games_jogador1_set1_final + games_jogador1_set2_final, saldo_tiebreak_set1 + saldo_tiebreak_set2, pontos_vitoria)
+        atualizar_estatisticas(jogador2, 0, 1, 0, games_jogador2_set1_final + games_jogador2_set2_final, -(saldo_tiebreak_set1 + saldo_tiebreak_set2), 0)
     elif vencedor_set1 == "Jogador 2" and vencedor_set2 == "Jogador 2":
-        atualizar_estatisticas(jogador2, 1, 0, 2, games_jogador2_set1_final + games_jogador2_set2_final, 0, pontos_vitoria)
-        atualizar_estatisticas(jogador1, 0, 1, 0, games_jogador1_set1_final + games_jogador1_set2_final, 0, 0)
+        atualizar_estatisticas(jogador2, 1, 0, 2, games_jogador2_set1_final + games_jogador2_set2_final, saldo_tiebreak_set1 + saldo_tiebreak_set2, pontos_vitoria)
+        atualizar_estatisticas(jogador1, 0, 1, 0, games_jogador1_set1_final + games_jogador1_set2_final, -(saldo_tiebreak_set1 + saldo_tiebreak_set2), 0)
     elif vencedor_set1 == vencedor_set2:
         if vencedor_supertiebreak == "Jogador 1":
-            atualizar_estatisticas(jogador1, 1, 0, 1, games_jogador1_set1_final + games_jogador1_set2_final, 1, pontos_vitoria)
-            atualizar_estatisticas(jogador2, 0, 1, 1, games_jogador2_set1_final + games_jogador2_set2_final, 1, 0)
+            atualizar_estatisticas(jogador1, 1, 0, 1, games_jogador1_set1_final + games_jogador1_set2_final, saldo_tiebreak_set1 + saldo_tiebreak_set2 + 1, pontos_vitoria)
+            atualizar_estatisticas(jogador2, 0, 1, 1, games_jogador2_set1_final + games_jogador2_set2_final, -(saldo_tiebreak_set1 + saldo_tiebreak_set2 + 1), 0)
         elif vencedor_supertiebreak == "Jogador 2":
-            atualizar_estatisticas(jogador2, 1, 0, 1, games_jogador2_set1_final + games_jogador2_set2_final, 1, pontos_vitoria)
-            atualizar_estatisticas(jogador1, 0, 1, 1, games_jogador1_set1_final + games_jogador1_set2_final, 1, 0)
+            atualizar_estatisticas(jogador2, 1, 0, 1, games_jogador2_set1_final + games_jogador2_set2_final, saldo_tiebreak_set1 + saldo_tiebreak_set2 + 1, pontos_vitoria)
+            atualizar_estatisticas(jogador1, 0, 1, 1, games_jogador1_set1_final + games_jogador1_set2_final, -(saldo_tiebreak_set1 + saldo_tiebreak_set2 + 1), 0)
 
 # Exibição da tabela de estatísticas
 st.header("Estatísticas por Grupo")
