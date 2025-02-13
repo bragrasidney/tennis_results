@@ -31,7 +31,6 @@ tenistas = [
     "Sandro Mesquita",
     "Sidney Santos",
     "Thiago Pinho",
-    "Warwick Melo",
     "Willian F",
     "Wilson"
 ]
@@ -53,9 +52,9 @@ def calcular_vencedor_set(games_jogador1, games_jogador2, pontos_tiebreak_jogado
 
 # Função para calcular o vencedor de um supertiebreak
 def calcular_vencedor_supertiebreak(pontos_jogador1, pontos_jogador2):
-    if pontos_jogador1 >= 10 or pontos_jogador1 >= pontos_jogador2 + 2:
+    if pontos_jogador1 >= 10 and pontos_jogador1 >= pontos_jogador2 + 2:
         return "Jogador 1"
-    elif pontos_jogador2 >= 10 or pontos_jogador2 >= pontos_jogador1 + 2:
+    elif pontos_jogador2 >= 10 and pontos_jogador2 >= pontos_jogador1 + 2:
         return "Jogador 2"
     return None
 
@@ -141,39 +140,29 @@ if st.button("Registrar Resultados"):
         vencedor_supertiebreak = calcular_vencedor_supertiebreak(pontos_jogador1_supertiebreak, pontos_jogador2_supertiebreak)
         if vencedor_supertiebreak == "Jogador 1":
             st.success(f"{jogador1} venceu o supertiebreak e a partida!")
+            # Atualizar estatísticas para o supertiebreak
+            atualizar_estatisticas(classe, grupo, jogador1, 1, 0, 1, games_jogador1_set1_final + games_jogador1_set2_final, saldo_tiebreak_set1 + saldo_tiebreak_set2 + 1, 30 if classe == "B" else 15 if classe == "C" else 8)
+            atualizar_estatisticas(classe, grupo, jogador2, 0, 1, 1, games_jogador2_set1_final + games_jogador2_set2_final, -(saldo_tiebreak_set1 + saldo_tiebreak_set2 + 1), 0)
         elif vencedor_supertiebreak == "Jogador 2":
             st.success(f"{jogador2} venceu o supertiebreak e a partida!")
+            # Atualizar estatísticas para o supertiebreak
+            atualizar_estatisticas(classe, grupo, jogador2, 1, 0, 1, games_jogador2_set1_final + games_jogador2_set2_final, saldo_tiebreak_set1 + saldo_tiebreak_set2 + 1, 30 if classe == "B" else 15 if classe == "C" else 8)
+            atualizar_estatisticas(classe, grupo, jogador1, 0, 1, 1, games_jogador1_set1_final + games_jogador1_set2_final, -(saldo_tiebreak_set1 + saldo_tiebreak_set2 + 1), 0)
         else:
             st.error("Supertiebreak ainda em andamento ou inválido.")
     else:
         if vencedor_set1 == "Jogador 1" and vencedor_set2 == "Jogador 1":
             st.success(f"{jogador1} venceu a partida!")
+            # Atualizar estatísticas para vitória nos sets
+            atualizar_estatisticas(classe, grupo, jogador1, 1, 0, 2, games_jogador1_set1_final + games_jogador1_set2_final, saldo_tiebreak_set1 + saldo_tiebreak_set2, 30 if classe == "B" else 15 if classe == "C" else 8)
+            atualizar_estatisticas(classe, grupo, jogador2, 0, 1, 0, games_jogador2_set1_final + games_jogador2_set2_final, -(saldo_tiebreak_set1 + saldo_tiebreak_set2), 0)
         elif vencedor_set1 == "Jogador 2" and vencedor_set2 == "Jogador 2":
             st.success(f"{jogador2} venceu a partida!")
+            # Atualizar estatísticas para vitória nos sets
+            atualizar_estatisticas(classe, grupo, jogador2, 1, 0, 2, games_jogador2_set1_final + games_jogador2_set2_final, saldo_tiebreak_set1 + saldo_tiebreak_set2, 30 if classe == "B" else 15 if classe == "C" else 8)
+            atualizar_estatisticas(classe, grupo, jogador1, 0, 1, 0, games_jogador1_set1_final + games_jogador1_set2_final, -(saldo_tiebreak_set1 + saldo_tiebreak_set2), 0)
         else:
             st.error("Partida ainda em andamento ou inválida.")
-
-    # Atualizar estatísticas
-    if classe == "B":
-        pontos_vitoria = 30
-    elif classe == "C":
-        pontos_vitoria = 15
-    elif classe == "D":
-        pontos_vitoria = 8
-
-    if vencedor_set1 == "Jogador 1" and vencedor_set2 == "Jogador 1":
-        atualizar_estatisticas(classe, grupo, jogador1, 1, 0, 2, games_jogador1_set1_final + games_jogador1_set2_final, saldo_tiebreak_set1 + saldo_tiebreak_set2, pontos_vitoria)
-        atualizar_estatisticas(classe, grupo, jogador2, 0, 1, 0, games_jogador2_set1_final + games_jogador2_set2_final, (saldo_tiebreak_set1 + saldo_tiebreak_set2), 0)
-    elif vencedor_set1 == "Jogador 2" and vencedor_set2 == "Jogador 2":
-        atualizar_estatisticas(classe, grupo, jogador2, 1, 0, 2, games_jogador2_set1_final + games_jogador2_set2_final, saldo_tiebreak_set1 + saldo_tiebreak_set2, pontos_vitoria)
-        atualizar_estatisticas(classe, grupo, jogador1, 0, 1, 0, games_jogador1_set1_final + games_jogador1_set2_final, (saldo_tiebreak_set1 + saldo_tiebreak_set2), 0)
-    elif vencedor_set1 == vencedor_set2:
-        if vencedor_supertiebreak == "Jogador 1":
-            atualizar_estatisticas(classe, grupo, jogador1, 1, 0, 1, games_jogador1_set1_final + games_jogador1_set2_final, saldo_tiebreak_set1 + saldo_tiebreak_set2 + 1, pontos_vitoria)
-            atualizar_estatisticas(classe, grupo, jogador2, 0, 1, 1, games_jogador2_set1_final + games_jogador2_set2_final, (saldo_tiebreak_set1 + saldo_tiebreak_set2 + 1), 0)
-        elif vencedor_supertiebreak == "Jogador 2":
-            atualizar_estatisticas(classe, grupo, jogador2, 1, 0, 1, games_jogador2_set1_final + games_jogador2_set2_final, saldo_tiebreak_set1 + saldo_tiebreak_set2 + 1, pontos_vitoria)
-            atualizar_estatisticas(classe, grupo, jogador1, 0, 1, 1, games_jogador1_set1_final + games_jogador1_set2_final, (saldo_tiebreak_set1 + saldo_tiebreak_set2 + 1), 0)
 
 # Exibição das tabelas por classe e grupo
 st.header("Estatísticas por Classe e Grupo")
