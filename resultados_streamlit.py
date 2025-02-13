@@ -31,7 +31,7 @@ tenistas = [
     "Sandro Mesquita",
     "Sidney Santos",
     "Thiago Pinho",
-    "Warwick Melo"
+    "Warwick Melo",
     "Willian F",
     "Wilson"
 ]
