@@ -59,16 +59,20 @@ def calcular_vencedor_supertiebreak(pontos_jogador1, pontos_jogador2):
     return None
 
 # Função para atualizar a tabela de estatísticas
-def atualizar_estatisticas(jogador, vitoria, derrota, sets, games, saldo_tiebreaks, pontos):
-    if jogador not in st.session_state.estatisticas:
-        st.session_state.estatisticas[jogador] = {"Jogos": 0, "Vitórias": 0, "Derrotas": 0, "Sets": 0, "Games": 0, "Tiebreaks": 0, "Pontos": 0}
-    st.session_state.estatisticas[jogador]["Jogos"] += 1
-    st.session_state.estatisticas[jogador]["Vitórias"] += vitoria
-    st.session_state.estatisticas[jogador]["Derrotas"] += derrota
-    st.session_state.estatisticas[jogador]["Sets"] += sets
-    st.session_state.estatisticas[jogador]["Games"] += games
-    st.session_state.estatisticas[jogador]["Tiebreaks"] += saldo_tiebreaks
-    st.session_state.estatisticas[jogador]["Pontos"] += pontos
+def atualizar_estatisticas(classe, grupo, jogador, vitoria, derrota, sets, games, saldo_tiebreaks, pontos):
+    if classe not in st.session_state.estatisticas:
+        st.session_state.estatisticas[classe] = {}
+    if grupo not in st.session_state.estatisticas[classe]:
+        st.session_state.estatisticas[classe][grupo] = {}
+    if jogador not in st.session_state.estatisticas[classe][grupo]:
+        st.session_state.estatisticas[classe][grupo][jogador] = {"Jogos": 0, "Vitórias": 0, "Derrotas": 0, "Sets": 0, "Games": 0, "Tiebreaks": 0, "Pontos": 0}
+    st.session_state.estatisticas[classe][grupo][jogador]["Jogos"] += 1
+    st.session_state.estatisticas[classe][grupo][jogador]["Vitórias"] += vitoria
+    st.session_state.estatisticas[classe][grupo][jogador]["Derrotas"] += derrota
+    st.session_state.estatisticas[classe][grupo][jogador]["Sets"] += sets
+    st.session_state.estatisticas[classe][grupo][jogador]["Games"] += games
+    st.session_state.estatisticas[classe][grupo][jogador]["Tiebreaks"] += saldo_tiebreaks
+    st.session_state.estatisticas[classe][grupo][jogador]["Pontos"] += pontos
 
 # Inicialização do Session State
 if "estatisticas" not in st.session_state:
@@ -154,21 +158,25 @@ if st.button("Registrar Resultados"):
         pontos_vitoria = 8
 
     if vencedor_set1 == "Jogador 1" and vencedor_set2 == "Jogador 1":
-        atualizar_estatisticas(jogador1, 1, 0, 2, games_jogador1_set1_final + games_jogador1_set2_final, saldo_tiebreak_set1 + saldo_tiebreak_set2, pontos_vitoria)
-        atualizar_estatisticas(jogador2, 0, 1, 0, games_jogador2_set1_final + games_jogador2_set2_final, -(saldo_tiebreak_set1 + saldo_tiebreak_set2), 0)
+        atualizar_estatisticas(classe, grupo, jogador1, 1, 0, 2, games_jogador1_set1_final + games_jogador1_set2_final, saldo_tiebreak_set1 + saldo_tiebreak_set2, pontos_vitoria)
+        atualizar_estatisticas(classe, grupo, jogador2, 0, 1, 0, games_jogador2_set1_final + games_jogador2_set2_final, -(saldo_tiebreak_set1 + saldo_tiebreak_set2), 0)
     elif vencedor_set1 == "Jogador 2" and vencedor_set2 == "Jogador 2":
-        atualizar_estatisticas(jogador2, 1, 0, 2, games_jogador2_set1_final + games_jogador2_set2_final, saldo_tiebreak_set1 + saldo_tiebreak_set2, pontos_vitoria)
-        atualizar_estatisticas(jogador1, 0, 1, 0, games_jogador1_set1_final + games_jogador1_set2_final, -(saldo_tiebreak_set1 + saldo_tiebreak_set2), 0)
+        atualizar_estatisticas(classe, grupo, jogador2, 1, 0, 2, games_jogador2_set1_final + games_jogador2_set2_final, saldo_tiebreak_set1 + saldo_tiebreak_set2, pontos_vitoria)
+        atualizar_estatisticas(classe, grupo, jogador1, 0, 1, 0, games_jogador1_set1_final + games_jogador1_set2_final, -(saldo_tiebreak_set1 + saldo_tiebreak_set2), 0)
     elif vencedor_set1 == vencedor_set2:
         if vencedor_supertiebreak == "Jogador 1":
-            atualizar_estatisticas(jogador1, 1, 0, 1, games_jogador1_set1_final + games_jogador1_set2_final, saldo_tiebreak_set1 + saldo_tiebreak_set2 + 1, pontos_vitoria)
-            atualizar_estatisticas(jogador2, 0, 1, 1, games_jogador2_set1_final + games_jogador2_set2_final, -(saldo_tiebreak_set1 + saldo_tiebreak_set2 + 1), 0)
+            atualizar_estatisticas(classe, grupo, jogador1, 1, 0, 1, games_jogador1_set1_final + games_jogador1_set2_final, saldo_tiebreak_set1 + saldo_tiebreak_set2 + 1, pontos_vitoria)
+            atualizar_estatisticas(classe, grupo, jogador2, 0, 1, 1, games_jogador2_set1_final + games_jogador2_set2_final, -(saldo_tiebreak_set1 + saldo_tiebreak_set2 + 1), 0)
         elif vencedor_supertiebreak == "Jogador 2":
-            atualizar_estatisticas(jogador2, 1, 0, 1, games_jogador2_set1_final + games_jogador2_set2_final, saldo_tiebreak_set1 + saldo_tiebreak_set2 + 1, pontos_vitoria)
-            atualizar_estatisticas(jogador1, 0, 1, 1, games_jogador1_set1_final + games_jogador1_set2_final, -(saldo_tiebreak_set1 + saldo_tiebreak_set2 + 1), 0)
+            atualizar_estatisticas(classe, grupo, jogador2, 1, 0, 1, games_jogador2_set1_final + games_jogador2_set2_final, saldo_tiebreak_set1 + saldo_tiebreak_set2 + 1, pontos_vitoria)
+            atualizar_estatisticas(classe, grupo, jogador1, 0, 1, 1, games_jogador1_set1_final + games_jogador1_set2_final, -(saldo_tiebreak_set1 + saldo_tiebreak_set2 + 1), 0)
 
-# Exibição da tabela de estatísticas
-st.header("Estatísticas por Grupo")
-df_estatisticas = pd.DataFrame.from_dict(st.session_state.estatisticas, orient='index')
-df_estatisticas = df_estatisticas.reset_index().rename(columns={'index': 'Jogador'})
-st.dataframe(df_estatisticas)
+# Exibição das tabelas por classe e grupo
+st.header("Estatísticas por Classe e Grupo")
+for classe in st.session_state.estatisticas:
+    st.subheader(f"Classe {classe}")
+    for grupo in st.session_state.estatisticas[classe]:
+        st.write(f"**Grupo {grupo}**")
+        df_grupo = pd.DataFrame.from_dict(st.session_state.estatisticas[classe][grupo], orient='index')
+        df_grupo = df_grupo.reset_index().rename(columns={'index': 'Jogador'})
+        st.dataframe(df_grupo)
