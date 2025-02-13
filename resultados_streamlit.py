@@ -137,7 +137,7 @@ else:
 
 # Botão para registrar os resultados
 if st.button("Registrar Resultados"):
-    if vencedor_set1 == vencedor_set2:
+    if vencedor_set1 != vencedor_set2:
         vencedor_supertiebreak = calcular_vencedor_supertiebreak(pontos_jogador1_supertiebreak, pontos_jogador2_supertiebreak)
         if vencedor_supertiebreak == "Jogador 1":
             st.success(f"{jogador1} venceu o supertiebreak e a partida!")
