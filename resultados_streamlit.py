@@ -1,6 +1,40 @@
 import streamlit as st
 import pandas as pd
 
+# Lista de jogadores pré-cadastrados
+tenistas = [
+    "Airton Barata",
+    "Augusto Silveira Espíndola",
+    "Bruno Casale",
+    "Carlos Frederico Da Costa",
+    "Danilo Alves",
+    "Denilson Montezani",
+    "Emivaldo Feitosa",
+    "Fagner Bantim",
+    "Fernando Lino",
+    "Fernando Sales Guedes",
+    "Gustavo Avila",
+    "Italo Araújo",
+    "Jalmir Moreno Fernandes",
+    "João Paulo Sampaio Rezende",
+    "Joel Pereira Silva",
+    "José Humberto Silva Junior",
+    "Júnior Neres",
+    "Luiz da Trindade Soares Júnior",
+    "Lupesse Santana",
+    "Mateus Moury",
+    "Matheus Costa Silva",
+    "Matheus Mesquita",
+    "Maximiliano Moura Costa",
+    "Paulo Pedrosa",
+    "Rhuan Teixeira",
+    "Sandro Mesquita",
+    "Sidney Santos",
+    "Thiago Pinho",
+    "Willian F",
+    "Wilson"
+]
+
 # Função para calcular o vencedor de um set
 def calcular_vencedor_set(games_jogador1, games_jogador2, pontos_tiebreak_jogador1=None, pontos_tiebreak_jogador2=None):
     if games_jogador1 >= 4 and games_jogador1 >= games_jogador2 + 2:
@@ -26,18 +60,19 @@ def calcular_vencedor_supertiebreak(pontos_jogador1, pontos_jogador2):
 
 # Função para atualizar a tabela de estatísticas
 def atualizar_estatisticas(jogador, vitoria, derrota, sets, games, saldo_tiebreaks, pontos):
-    if jogador not in estatisticas:
-        estatisticas[jogador] = {"Jogos": 0, "Vitórias": 0, "Derrotas": 0, "Sets": 0, "Games": 0, "Tiebreaks": 0, "Pontos": 0}
-    estatisticas[jogador]["Jogos"] += 1
-    estatisticas[jogador]["Vitórias"] += vitoria
-    estatisticas[jogador]["Derrotas"] += derrota
-    estatisticas[jogador]["Sets"] += sets
-    estatisticas[jogador]["Games"] += games
-    estatisticas[jogador]["Tiebreaks"] += saldo_tiebreaks
-    estatisticas[jogador]["Pontos"] += pontos
+    if jogador not in st.session_state.estatisticas:
+        st.session_state.estatisticas[jogador] = {"Jogos": 0, "Vitórias": 0, "Derrotas": 0, "Sets": 0, "Games": 0, "Tiebreaks": 0, "Pontos": 0}
+    st.session_state.estatisticas[jogador]["Jogos"] += 1
+    st.session_state.estatisticas[jogador]["Vitórias"] += vitoria
+    st.session_state.estatisticas[jogador]["Derrotas"] += derrota
+    st.session_state.estatisticas[jogador]["Sets"] += sets
+    st.session_state.estatisticas[jogador]["Games"] += games
+    st.session_state.estatisticas[jogador]["Tiebreaks"] += saldo_tiebreaks
+    st.session_state.estatisticas[jogador]["Pontos"] += pontos
 
-# Inicialização das estatísticas
-estatisticas = {}
+# Inicialização do Session State
+if "estatisticas" not in st.session_state:
+    st.session_state.estatisticas = {}
 
 # Interface do Streamlit
 st.title("Registro de Resultados de Tênis")
@@ -46,11 +81,13 @@ st.title("Registro de Resultados de Tênis")
 classe = st.selectbox("Selecione a Classe", ["B", "C", "D"])
 grupo = st.selectbox("Selecione o Grupo", ["Grupo 1", "Grupo 2", "Grupo 3", "Grupo 4"])
 
+# Seleção de jogadores
+st.header("Selecionar Jogadores")
+jogador1 = st.selectbox("Jogador 1", tenistas)
+jogador2 = st.selectbox("Jogador 2", tenistas)
+
 # Entrada de resultados
 st.header("Registrar Resultados")
-jogador1 = st.text_input("Nome do Jogador 1")
-jogador2 = st.text_input("Nome do Jogador 2")
-
 st.subheader("Primeiro Set")
 games_jogador1_set1 = st.number_input("Games do Jogador 1 - Set 1", min_value=0, max_value=6, value=0)
 games_jogador2_set1 = st.number_input("Games do Jogador 2 - Set 1", min_value=0, max_value=6, value=0)
@@ -132,6 +169,6 @@ if st.button("Registrar Resultados"):
 
 # Exibição da tabela de estatísticas
 st.header("Estatísticas por Grupo")
-df_estatisticas = pd.DataFrame.from_dict(estatisticas, orient='index')
+df_estatisticas = pd.DataFrame.from_dict(st.session_state.estatisticas, orient='index')
 df_estatisticas = df_estatisticas.reset_index().rename(columns={'index': 'Jogador'})
 st.dataframe(df_estatisticas)
