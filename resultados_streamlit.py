@@ -31,6 +31,7 @@ tenistas = [
     "Sandro Mesquita",
     "Sidney Santos",
     "Victtor Barbosa",
+    "Vinicius Paiva",
     "Thiago Pinho",
     "Walter L",
     "Walmir Irineu",
