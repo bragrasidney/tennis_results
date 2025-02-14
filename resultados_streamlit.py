@@ -287,7 +287,6 @@ for classe in classes_ordenadas:
 import streamlit as st
 import pandas as pd
 
-# Função para processar o resultado de uma partida
 def processar_resultado(resultado):
     sets = resultado.split()
     placares = []
@@ -295,9 +294,29 @@ def processar_resultado(resultado):
         if '(' in s:  # Verifica se há tiebreak
             games, tiebreak = s.split('(')
             tiebreak = tiebreak.replace(')', '')
-            placares.append((int(games.split('/')[0]), int(games.split('/')[1]), int(tiebreak.split('/')[0]), int(tiebreak.split('/')[1])))
+            try:
+                game_scores = games.split('/')
+                tiebreak_scores = tiebreak.split('/')
+                
+                # Verifique se o split resultou em dois elementos
+                if len(game_scores) == 2 and len(tiebreak_scores) == 2:
+                    placares.append((int(game_scores[0]), int(game_scores[1]), int(tiebreak_scores[0]), int(tiebreak_scores[1])))
+                else:
+                    raise ValueError("Formato inválido detectado")
+            except (IndexError, ValueError) as e:
+                print(f"Erro ao processar o set '{s}': {e}")
+                placares.append((None, None, None, None))  # Ou qualquer outro valor padrão que você preferir
         else:
-            placares.append((int(s.split('/')[0]), int(s.split('/')[1]), None, None))
+            try:
+                game_scores = s.split('/')
+                # Verifique se o split resultou em dois elementos
+                if len(game_scores) == 2:
+                    placares.append((int(game_scores[0]), int(game_scores[1]), None, None))
+                else:
+                    raise ValueError("Formato inválido detectado")
+            except (IndexError, ValueError) as e:
+                print(f"Erro ao processar o set '{s}': {e}")
+                placares.append((None, None, None, None))  # Ou qualquer outro valor padrão que você preferir
     return placares
 
 # Função para calcular o vencedor de um set
