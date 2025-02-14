@@ -98,11 +98,11 @@ if jogador1 == jogador2:
 # Entrada de resultados
 st.header("Registrar Resultados")
 st.subheader("Primeiro Set")
-games_jogador1_set1 = st.number_input("Games do Jogador 1 - Set 1", min_value=0, max_value=7, value=0)
-games_jogador2_set1 = st.number_input("Games do Jogador 2 - Set 1", min_value=0, max_value=7, value=0)
+games_jogador1_set1 = st.number_input("Games do Jogador 1 - Set 1", min_value=0, max_value=4, value=0)
+games_jogador2_set1 = st.number_input("Games do Jogador 2 - Set 1", min_value=0, max_value=4, value=0)
 
 # Verifica se é necessário um tiebreak no primeiro set
-if games_jogador1_set1 == 6 and games_jogador2_set1 == 6:
+if games_jogador1_set1 >= 3 and games_jogador2_set1 >= 3:
     st.subheader("Tiebreak do Primeiro Set")
     pontos_tiebreak_jogador1_set1 = st.number_input("Pontos do Jogador 1 - Tiebreak Set 1", min_value=0, max_value=20, value=0)
     pontos_tiebreak_jogador2_set1 = st.number_input("Pontos do Jogador 2 - Tiebreak Set 1", min_value=0, max_value=20, value=0)
@@ -111,11 +111,11 @@ else:
     pontos_tiebreak_jogador2_set1 = None
 
 st.subheader("Segundo Set")
-games_jogador1_set2 = st.number_input("Games do Jogador 1 - Set 2", min_value=0, max_value=7, value=0)
-games_jogador2_set2 = st.number_input("Games do Jogador 2 - Set 2", min_value=0, max_value=7, value=0)
+games_jogador1_set2 = st.number_input("Games do Jogador 1 - Set 2", min_value=0, max_value=4, value=0)
+games_jogador2_set2 = st.number_input("Games do Jogador 2 - Set 2", min_value=0, max_value=4, value=0)
 
 # Verifica se é necessário um tiebreak no segundo set
-if games_jogador1_set2 == 6 and games_jogador2_set2 == 6:
+if games_jogador1_set2 >= 3 and games_jogador2_set2 >= 3:
     st.subheader("Tiebreak do Segundo Set")
     pontos_tiebreak_jogador1_set2 = st.number_input("Pontos do Jogador 1 - Tiebreak Set 2", min_value=0, max_value=20, value=0)
     pontos_tiebreak_jogador2_set2 = st.number_input("Pontos do Jogador 2 - Tiebreak Set 2", min_value=0, max_value=20, value=0)
