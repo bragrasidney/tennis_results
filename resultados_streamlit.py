@@ -116,9 +116,13 @@ def carregar_e_processar_excel(uploaded_file):
                     if placar[2] > placar[3]:
                         tiebreaks_jogador1 += 1
                         tiebreaks_jogador2 += 0
+                        games_jogador1 += 1  # Tiebreak vencido conta como game vencido
+                        games_jogador2 += 0  # Tiebreak perdido conta como game perdido
                     else:
                         tiebreaks_jogador1 += 0
                         tiebreaks_jogador2 += 1
+                        games_jogador1 += 0  # Tiebreak perdido conta como game perdido
+                        games_jogador2 += 1  # Tiebreak vencido conta como game vencido
 
         # Contabilizar sets vencidos e perdidos
         sets_jogador1 = sum(1 for placar in placares if placar[0] is not None and placar[1] is not None and placar[0] > placar[1])
