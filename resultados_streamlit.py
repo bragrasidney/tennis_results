@@ -153,7 +153,7 @@ for classe in classes_ordenadas:
     st.subheader(f"Classe {classe}")
     
     # Ordenar os grupos em ordem numérica
-    grupos_ordenados = sorted(st.session_state.estatisticas[classe].keys(), key=lambda x: int(x.split()[-1]))
+    grupos_ordenados = sorted(st.session_state.estatisticas[classe].keys(), key=lambda x: int(re.findall(r'\d+', x)[-1]) if re.findall(r'\d+', x) else x)
     
     for grupo in grupos_ordenados:
         st.write(f"**Grupo {grupo}**")
