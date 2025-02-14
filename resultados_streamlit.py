@@ -163,7 +163,7 @@ def ordenar_grupos(nome_grupo):
         except ValueError:
             return nome_grupo  # Ordena alfabeticamente se não for um número
 
-grupos_ordenados = sorted(st.session_state.estatisticas[classe].keys(), key=ordenar_grupos)
+    grupos_ordenados = sorted(st.session_state.estatisticas[classe].keys(), key=ordenar_grupos)
     
     for grupo in grupos_ordenados:
         st.write(f"**Grupo {grupo}**")
