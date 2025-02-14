@@ -381,6 +381,7 @@ if uploaded_file:
             vitoria_jogador1, vitoria_jogador2 = 0, 1
         
         # Calcular sets, games e tiebreaks
+        # Inicialização das variáveis
         sets_jogador1 = 0
         sets_jogador2 = 0
         games_jogador1 = 0
@@ -389,15 +390,19 @@ if uploaded_file:
         saldo_tiebreaks_jogador2 = 0
         
         for placar in placares:
-            games_jogador1 += placar[0]
-            games_jogador2 += placar[1]
-            if placar[2] is not None:  # Se houve tiebreak
+            # Verifique se os valores de placar são números antes de somar
+            if placar[0] is not None and placar[1] is not None:
+                games_jogador1 += int(placar[0])
+                games_jogador2 += int(placar[1])
+            
+            if placar[2] is not None and placar[3] is not None:  # Se houve tiebreak
                 if placar[2] > placar[3]:
                     saldo_tiebreaks_jogador1 += 1
                     saldo_tiebreaks_jogador2 -= 1
                 else:
                     saldo_tiebreaks_jogador1 -= 1
                     saldo_tiebreaks_jogador2 += 1
+
         
         # Atualizar estatísticas
         if classe == "B":
