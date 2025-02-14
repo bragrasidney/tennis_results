@@ -149,7 +149,7 @@ vencedor_set2, games_jogador1_set2_final, games_jogador2_set2_final, saldo_tiebr
 )
 
 # Exibe o supertiebreak apenas se houver empate nos sets
-if vencedor_set1 == vencedor_set2:
+if vencedor_set1 != vencedor_set2:
                                                                                                                                                
      
     st.subheader("Supertiebreak (obrigatório devido ao empate nos sets)")
