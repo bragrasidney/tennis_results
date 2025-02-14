@@ -119,8 +119,8 @@ def carregar_e_processar_excel(uploaded_file):
                     saldo_tiebreaks_jogador2 += 1
 
         # Contabilizar sets vencidos e perdidos
-        sets_jogador1 = sum(1 for placar in placares if placar[0] > placar[1])
-        sets_jogador2 = sum(1 for placar in placares if placar[1] > placar[0])
+        sets_jogador1 = sum(1 for placar in placares if placar[0] is not None and placar[1] is not None and placar[0] > placar[1])
+        sets_jogador2 = sum(1 for placar in placares if placar[0] is not None and placar[1] is not None and placar[1] > placar[0])
 
         pontos_vitoria = 0  # Valor padrão
 
