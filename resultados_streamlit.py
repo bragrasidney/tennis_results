@@ -338,7 +338,7 @@ if "estatisticas" not in st.session_state:
 # Carregar a planilha Excel
 uploaded_file = st.file_uploader("Carregar planilha Excel", type=["xlsx"])
 if uploaded_file:
-    df = pd.read_excel(uploaded_file, sheet_name="1º Open Ranking Tenistas de Parauapebas - Jogos")
+    df = pd.read_excel(uploaded_file, sheet_name="Jogos")
     
     # Filtrar apenas as partidas concluídas
     df_concluidas = df[df["STATUS"] == "Concluída"]
