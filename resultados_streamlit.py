@@ -116,6 +116,8 @@ def carregar_e_processar_excel(uploaded_file):
                     saldo_tiebreaks_jogador1 -= 1
                     saldo_tiebreaks_jogador2 += 1
 
+        pontos_vitoria = 0  # Valor padrão
+
         if classe == "B":
             pontos_vitoria = 30
         elif classe == "C":
