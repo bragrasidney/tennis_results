@@ -30,6 +30,7 @@ tenistas = [
     "Rhuan Teixeira",
     "Sandro Mesquita",
     "Sidney Santos",
+    "Victtor Barbosa",
     "Thiago Pinho",
     "Willian F",
     "Wilson"
