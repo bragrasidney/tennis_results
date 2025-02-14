@@ -37,7 +37,7 @@ def calcular_vencedor_supertiebreak(pontos_jogador1, pontos_jogador2):
     return None
 
 # Função para atualizar a tabela de estatísticas
-def atualizar_estatisticas(classe, grupo, jogador, vitoria, derrota, sets_vencidos, sets_perdidos, games_vencidos, games_perdidos, saldo_tiebreaks, pontos):
+def atualizar_estatisticas(classe, grupo, jogador, vitoria, derrota, sets_vencidos, sets_perdidos, games_vencidos, games_perdidos, tiebreaks_vencidos, tiebreaks_perdidos, pontos):
     if classe not in st.session_state.estatisticas:
         st.session_state.estatisticas[classe] = {}
     if grupo not in st.session_state.estatisticas[classe]:
@@ -53,8 +53,8 @@ def atualizar_estatisticas(classe, grupo, jogador, vitoria, derrota, sets_vencid
     st.session_state.estatisticas[classe][grupo][jogador]["Sets Perdidos"] += sets_perdidos
     st.session_state.estatisticas[classe][grupo][jogador]["Games Vencidos"] += games_vencidos
     st.session_state.estatisticas[classe][grupo][jogador]["Games Perdidos"] += games_perdidos
-    st.session_state.estatisticas[classe][grupo][jogador]["Tiebreaks Vencidos"] += saldo_tiebreaks if saldo_tiebreaks > 0 else 0
-    st.session_state.estatisticas[classe][grupo][jogador]["Tiebreaks Perdidos"] += abs(saldo_tiebreaks) if saldo_tiebreaks < 0 else 0
+    st.session_state.estatisticas[classe][grupo][jogador]["Tiebreaks Vencidos"] += tiebreaks_vencidos
+    st.session_state.estatisticas[classe][grupo][jogador]["Tiebreaks Perdidos"] += tiebreaks_perdidos
     st.session_state.estatisticas[classe][grupo][jogador]["Pontos"] += pontos
 
 # Função para processar o resultado de uma partida
@@ -115,9 +115,9 @@ def carregar_e_processar_excel(uploaded_file):
                 if placar[0] == 3 and placar[1] == 3:  # Set decidido por tiebreak
                     if placar[2] > placar[3]:
                         tiebreaks_jogador1 += 1
-                        tiebreaks_jogador2 -= 1
+                        tiebreaks_jogador2 += 0
                     else:
-                        tiebreaks_jogador1 -= 1
+                        tiebreaks_jogador1 += 0
                         tiebreaks_jogador2 += 1
 
         # Contabilizar sets vencidos e perdidos
@@ -133,8 +133,8 @@ def carregar_e_processar_excel(uploaded_file):
         elif classe == "D":
             pontos_vitoria = 8
         
-        atualizar_estatisticas(classe, grupo, jogador1, vitoria_jogador1, vitoria_jogador2, sets_jogador1, len(placares) - sets_jogador1, games_jogador1, games_jogador2, tiebreaks_jogador1, pontos_vitoria if vencedor == jogador1 else 0)
-        atualizar_estatisticas(classe, grupo, jogador2, vitoria_jogador2, vitoria_jogador1, sets_jogador2, len(placares) - sets_jogador2, games_jogador2, games_jogador1, tiebreaks_jogador2, pontos_vitoria if vencedor == jogador2 else 0)
+        atualizar_estatisticas(classe, grupo, jogador1, vitoria_jogador1, vitoria_jogador2, sets_jogador1, len(placares) - sets_jogador1, games_jogador1, games_jogador2, tiebreaks_jogador1, tiebreaks_jogador2, pontos_vitoria if vencedor == jogador1 else 0)
+        atualizar_estatisticas(classe, grupo, jogador2, vitoria_jogador2, vitoria_jogador1, sets_jogador2, len(placares) - sets_jogador2, games_jogador2, games_jogador1, tiebreaks_jogador2, tiebreaks_jogador1, pontos_vitoria if vencedor == jogador2 else 0)
 
 # Inicialização do Session State
 if "estatisticas" not in st.session_state:
