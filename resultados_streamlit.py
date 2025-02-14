@@ -152,8 +152,18 @@ classes_ordenadas = sorted(st.session_state.estatisticas.keys())
 for classe in classes_ordenadas:
     st.subheader(f"Classe {classe}")
     
-    # Ordenar os grupos em ordem numérica
-    grupos_ordenados = sorted(st.session_state.estatisticas[classe].keys(), key=lambda x: int(re.findall(r'\d+', x)[-1]) if re.findall(r'\d+', x) else x)
+   def ordenar_grupos(nome_grupo):
+    if nome_grupo == "Fase Final":
+        return float('inf')  # Coloca "Fase Final" por último
+    elif nome_grupo == "Grupo A":
+        return 0  # Coloca "Grupo A" no início (ou em uma posição específica)
+    else:
+        try:
+            return int(nome_grupo.split()[-1])
+        except ValueError:
+            return nome_grupo  # Ordena alfabeticamente se não for um número
+
+grupos_ordenados = sorted(st.session_state.estatisticas[classe].keys(), key=ordenar_grupos)
     
     for grupo in grupos_ordenados:
         st.write(f"**Grupo {grupo}**")
