@@ -33,7 +33,7 @@ tenistas = [
     "Victtor Barbosa",
     "Thiago Pinho",
     "Walter L",
-    "Walmir Irineu"
+    "Walmir Irineu",
     "Warwick Melo",
     "Willian F",
     "Wilson"
