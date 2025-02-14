@@ -173,10 +173,26 @@ for classe in classes_ordenadas:
         # Obter os dados do grupo
         dados_grupo = st.session_state.estatisticas[classe][grupo]
         
-        # Converter para DataFrame e ordenar os jogadores em ordem alfabética
+        # Converter para DataFrame
         df_grupo = pd.DataFrame.from_dict(dados_grupo, orient='index')
         df_grupo = df_grupo.reset_index().rename(columns={'index': 'Jogador'})
-        df_grupo = df_grupo.sort_values(by="Jogador")  # Ordenar por nome do jogador
+        
+        # Calcular saldos
+        df_grupo["Saldo de Sets"] = df_grupo["Sets"]
+        df_grupo["Saldo de Games"] = df_grupo["Games"]
+        df_grupo["Saldo de Tiebreaks"] = df_grupo["Tiebreaks"]
+        
+        # Ordenar por Vitórias, Saldo de Sets, Saldo de Games e Saldo de Tiebreaks
+        df_grupo = df_grupo.sort_values(
+            by=["Vitórias", "Saldo de Sets", "Saldo de Games", "Saldo de Tiebreaks"],
+            ascending=[False, False, False, False]
+        )
+        
+        # Adicionar coluna de Posição
+        df_grupo["Posição"] = range(1, len(df_grupo) + 1)
+        
+        # Selecionar e reordenar as colunas
+        df_grupo = df_grupo[["Posição", "Jogador", "Jogos", "Vitórias", "Derrotas", "Saldo de Sets", "Saldo de Games", "Saldo de Tiebreaks"]]
         
         # Exibir a tabela
         st.dataframe(df_grupo)
