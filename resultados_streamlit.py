@@ -37,20 +37,22 @@ def calcular_vencedor_supertiebreak(pontos_jogador1, pontos_jogador2):
     return None
 
 # Função para atualizar a tabela de estatísticas
-def atualizar_estatisticas(classe, grupo, jogador, vitoria, derrota, sets, games, saldo_tiebreaks, pontos):
+def atualizar_estatisticas(classe, grupo, jogador, vitoria, derrota, sets_vencidos, sets_perdidos, games_vencidos, games_perdidos, saldo_tiebreaks, pontos):
     if classe not in st.session_state.estatisticas:
         st.session_state.estatisticas[classe] = {}
     if grupo not in st.session_state.estatisticas[classe]:
         st.session_state.estatisticas[classe][grupo] = {}
     if jogador not in st.session_state.estatisticas[classe][grupo]:
         st.session_state.estatisticas[classe][grupo][jogador] = {
-            "Jogos": 0, "Vitórias": 0, "Derrotas": 0, "Sets": 0, "Games": 0, "Tiebreaks": 0, "Pontos": 0
+            "Jogos": 0, "Vitórias": 0, "Derrotas": 0, "Sets Vencidos": 0, "Sets Perdidos": 0, "Games Vencidos": 0, "Games Perdidos": 0, "Tiebreaks": 0, "Pontos": 0
         }
     st.session_state.estatisticas[classe][grupo][jogador]["Jogos"] += 1
     st.session_state.estatisticas[classe][grupo][jogador]["Vitórias"] += vitoria
     st.session_state.estatisticas[classe][grupo][jogador]["Derrotas"] += derrota
-    st.session_state.estatisticas[classe][grupo][jogador]["Sets"] += sets
-    st.session_state.estatisticas[classe][grupo][jogador]["Games"] += games
+    st.session_state.estatisticas[classe][grupo][jogador]["Sets Vencidos"] += sets_vencidos
+    st.session_state.estatisticas[classe][grupo][jogador]["Sets Perdidos"] += sets_perdidos
+    st.session_state.estatisticas[classe][grupo][jogador]["Games Vencidos"] += games_vencidos
+    st.session_state.estatisticas[classe][grupo][jogador]["Games Perdidos"] += games_perdidos
     st.session_state.estatisticas[classe][grupo][jogador]["Tiebreaks"] += saldo_tiebreaks
     st.session_state.estatisticas[classe][grupo][jogador]["Pontos"] += pontos
 
@@ -116,6 +118,10 @@ def carregar_e_processar_excel(uploaded_file):
                     saldo_tiebreaks_jogador1 -= 1
                     saldo_tiebreaks_jogador2 += 1
 
+        # Contabilizar sets vencidos e perdidos
+        sets_jogador1 = sum(1 for placar in placares if placar[0] > placar[1])
+        sets_jogador2 = sum(1 for placar in placares if placar[1] > placar[0])
+
         pontos_vitoria = 0  # Valor padrão
 
         if classe == "B":
@@ -125,8 +131,8 @@ def carregar_e_processar_excel(uploaded_file):
         elif classe == "D":
             pontos_vitoria = 8
         
-        atualizar_estatisticas(classe, grupo, jogador1, vitoria_jogador1, vitoria_jogador2, sets_jogador1, games_jogador1, saldo_tiebreaks_jogador1, pontos_vitoria if vencedor == jogador1 else 0)
-        atualizar_estatisticas(classe, grupo, jogador2, vitoria_jogador2, vitoria_jogador1, sets_jogador2, games_jogador2, saldo_tiebreaks_jogador2, pontos_vitoria if vencedor == jogador2 else 0)
+        atualizar_estatisticas(classe, grupo, jogador1, vitoria_jogador1, vitoria_jogador2, sets_jogador1, len(placares) - sets_jogador1, games_jogador1, games_jogador2, saldo_tiebreaks_jogador1, pontos_vitoria if vencedor == jogador1 else 0)
+        atualizar_estatisticas(classe, grupo, jogador2, vitoria_jogador2, vitoria_jogador1, sets_jogador2, len(placares) - sets_jogador2, games_jogador2, games_jogador1, saldo_tiebreaks_jogador2, pontos_vitoria if vencedor == jogador2 else 0)
 
 # Inicialização do Session State
 if "estatisticas" not in st.session_state:
@@ -178,13 +184,12 @@ for classe in classes_ordenadas:
         df_grupo = df_grupo.reset_index().rename(columns={'index': 'Jogador'})
         
         # Calcular saldos
-        df_grupo["Saldo de Sets"] = df_grupo["Sets"]
-        df_grupo["Saldo de Games"] = df_grupo["Games"]
-        df_grupo["Saldo de Tiebreaks"] = df_grupo["Tiebreaks"]
+        df_grupo["Saldo de Sets"] = df_grupo["Sets Vencidos"] - df_grupo["Sets Perdidos"]
+        df_grupo["Saldo de Games"] = df_grupo["Games Vencidos"] - df_grupo["Games Perdidos"]
         
         # Ordenar por Vitórias, Saldo de Sets, Saldo de Games e Saldo de Tiebreaks
         df_grupo = df_grupo.sort_values(
-            by=["Vitórias", "Saldo de Sets", "Saldo de Games", "Saldo de Tiebreaks"],
+            by=["Vitórias", "Saldo de Sets", "Saldo de Games", "Tiebreaks"],
             ascending=[False, False, False, False]
         )
         
@@ -192,7 +197,7 @@ for classe in classes_ordenadas:
         df_grupo["Posição"] = range(1, len(df_grupo) + 1)
         
         # Selecionar e reordenar as colunas
-        df_grupo = df_grupo[["Posição", "Jogador", "Jogos", "Vitórias", "Derrotas", "Saldo de Sets", "Saldo de Games", "Saldo de Tiebreaks"]]
+        df_grupo = df_grupo[["Posição", "Jogador", "Jogos", "Vitórias", "Derrotas", "Saldo de Sets", "Saldo de Games", "Tiebreaks"]]
         
         # Exibir a tabela
         st.dataframe(df_grupo)
