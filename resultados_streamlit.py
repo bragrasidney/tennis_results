@@ -260,10 +260,26 @@ else:
 
 # Exibição das tabelas por classe e grupo
 st.header("Estatísticas por Classe e Grupo")
-for classe in st.session_state.estatisticas:
+
+# Ordenar as classes em ordem alfabética
+classes_ordenadas = sorted(st.session_state.estatisticas.keys())
+
+for classe in classes_ordenadas:
     st.subheader(f"Classe {classe}")
-    for grupo in st.session_state.estatisticas[classe]:
+    
+    # Ordenar os grupos em ordem numérica
+    grupos_ordenados = sorted(st.session_state.estatisticas[classe].keys(), key=lambda x: int(x.split()[-1]))
+    
+    for grupo in grupos_ordenados:
         st.write(f"**Grupo {grupo}**")
-        df_grupo = pd.DataFrame.from_dict(st.session_state.estatisticas[classe][grupo], orient='index')
+        
+        # Obter os dados do grupo
+        dados_grupo = st.session_state.estatisticas[classe][grupo]
+        
+        # Converter para DataFrame e ordenar os jogadores em ordem alfabética
+        df_grupo = pd.DataFrame.from_dict(dados_grupo, orient='index')
         df_grupo = df_grupo.reset_index().rename(columns={'index': 'Jogador'})
+        df_grupo = df_grupo.sort_values(by="Jogador")  # Ordenar por nome do jogador
+        
+        # Exibir a tabela
         st.dataframe(df_grupo)
