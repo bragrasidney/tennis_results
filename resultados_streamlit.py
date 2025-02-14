@@ -32,6 +32,7 @@ tenistas = [
     "Sidney Santos",
     "Victtor Barbosa",
     "Thiago Pinho",
+    "Warwick Melo",
     "Willian F",
     "Wilson"
 ]
